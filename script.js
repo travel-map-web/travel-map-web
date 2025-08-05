@@ -31,10 +31,11 @@ function initMap() {
             touchZoom: true
         });
 
-        // 添加地图图层 - 使用温馨的地图样式
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 18
+        // 添加地图图层 - 使用国内地图服务
+        L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+            attribution: '© 高德地图',
+            maxZoom: 18,
+            subdomains: ['1', '2', '3', '4']
         }).addTo(map);
 
         console.log('地图初始化成功');
@@ -325,9 +326,28 @@ async function loadPlaces() {
         // 生成时间线卡片
         generateTimeline(places);
         
+        // 隐藏加载动画
+        hideLoading();
+        
     } catch (error) {
         console.error('加载旅行数据失败:', error);
         showErrorMessage();
+    }
+}
+
+// 隐藏加载动画
+function hideLoading() {
+    const loading = document.getElementById('loading');
+    if (loading) {
+        // 添加淡出动画效果
+        loading.style.opacity = '0';
+        loading.style.transition = 'opacity 0.5s ease-out';
+        
+        setTimeout(() => {
+            loading.style.display = 'none';
+        }, 500);
+        
+        console.log('地图加载完成，隐藏加载动画');
     }
 }
 
