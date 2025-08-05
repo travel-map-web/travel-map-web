@@ -451,7 +451,35 @@ window.addEventListener('resize', function() {
             map.invalidateSize();
         }, 100);
     }
+    
+    // 响应式视图调整 - 仅在用户没有手动选择过视图时自动调整
+    handleResponsiveViewChange();
 });
+
+// 处理响应式视图变化
+function handleResponsiveViewChange() {
+    // 检查是否需要根据屏幕大小调整视图
+    const isMobile = isMobileDevice();
+    const currentView = timelineState.currentView;
+    
+    // 如果当前是桌面端但使用移动端视图，或者是移动端但使用桌面端视图，则自动调整
+    // 但保留用户的手动选择权
+    if (isMobile && currentView === 'timeline') {
+        // 移动端建议使用grid视图，但不强制切换，让用户保持选择
+        console.log('检测到移动端设备，建议使用九宫格视图以获得更好的体验');
+    } else if (!isMobile && currentView === 'grid') {
+        // 桌面端建议使用timeline视图，但不强制切换
+        console.log('检测到桌面端设备，建议使用时间线视图以获得更好的体验');
+    }
+}
+
+// 移动端检测函数
+function isMobileDevice() {
+    return window.innerWidth <= 768 || 
+           'ontouchstart' in window || 
+           navigator.maxTouchPoints > 0 ||
+           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 
 // 触摸设备优化
 if ('ontouchstart' in window) {
@@ -462,7 +490,7 @@ if ('ontouchstart' in window) {
 const timelineState = {
     originalPlaces: [],
     filteredPlaces: [],
-    currentView: 'timeline',
+    currentView: isMobileDevice() ? 'grid' : 'timeline', // 移动端默认使用九宫格模式
     currentSort: 'newest',
     currentFilter: 'all',
     searchQuery: ''
@@ -487,6 +515,9 @@ function generateTimeline(places) {
 
 // 初始化时间线控制功能
 function initTimelineControls() {
+    // 初始化视图状态
+    initializeViewState();
+    
     // 搜索功能
     const searchInput = document.getElementById('timelineSearch');
     const clearSearchBtn = document.getElementById('clearSearch');
@@ -532,6 +563,21 @@ function initTimelineControls() {
     const resetFiltersBtn = document.getElementById('resetFilters');
     if (resetFiltersBtn) {
         resetFiltersBtn.addEventListener('click', clearAllFilters);
+    }
+}
+
+// 初始化视图状态
+function initializeViewState() {
+    // 更新视图按钮状态
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === timelineState.currentView);
+    });
+
+    // 更新容器视图
+    const timeline = document.getElementById('timeline');
+    if (timeline) {
+        timeline.setAttribute('data-view', timelineState.currentView);
     }
 }
 
