@@ -518,22 +518,57 @@ function initTimelineControls() {
     // 初始化视图状态
     initializeViewState();
     
-    // 搜索功能
-    const searchInput = document.getElementById('timelineSearch');
-    const clearSearchBtn = document.getElementById('clearSearch');
+    // 移动端搜索功能
+    const mobileSearchInput = document.getElementById('timelineSearch');
+    const mobileClearSearchBtn = document.getElementById('clearSearch');
     
-    if (searchInput) {
-        searchInput.addEventListener('input', handleSearch);
-        searchInput.addEventListener('keydown', (e) => {
+    // 桌面端搜索功能
+    const desktopSearchInput = document.getElementById('timelineSearchDesktop');
+    const desktopClearSearchBtn = document.getElementById('clearSearchDesktop');
+    
+    // 搜索输入同步
+    function syncSearchInputs(sourceInput, targetInput) {
+        if (sourceInput && targetInput) {
+            sourceInput.addEventListener('input', (e) => {
+                targetInput.value = e.target.value;
+                handleSearch(e);
+            });
+        }
+    }
+    
+    // 同步移动端和桌面端搜索框
+    syncSearchInputs(mobileSearchInput, desktopSearchInput);
+    syncSearchInputs(desktopSearchInput, mobileSearchInput);
+    
+    // 移动端搜索事件
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    // 桌面端搜索事件
+    if (desktopSearchInput) {
+        desktopSearchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
             }
         });
     }
 
-    if (clearSearchBtn) {
-        clearSearchBtn.addEventListener('click', clearSearch);
+    // 清除搜索按钮
+    if (mobileClearSearchBtn) {
+        mobileClearSearchBtn.addEventListener('click', () => clearSearch('mobile'));
     }
+    
+    if (desktopClearSearchBtn) {
+        desktopClearSearchBtn.addEventListener('click', () => clearSearch('desktop'));
+    }
+
+    // 移动端下拉菜单控制
+    initMobileDropdowns();
 
     // 筛选按钮
     const filterButtons = document.querySelectorAll('.filter-btn');
@@ -541,13 +576,13 @@ function initTimelineControls() {
         btn.addEventListener('click', () => handleFilter(btn.dataset.filter));
     });
 
-    // 排序选择
+    // 桌面端排序选择
     const sortSelect = document.getElementById('timelineSort');
     if (sortSelect) {
         sortSelect.addEventListener('change', (e) => handleSort(e.target.value));
     }
 
-    // 视图切换
+    // 桌面端视图切换
     const viewButtons = document.querySelectorAll('.view-btn');
     viewButtons.forEach(btn => {
         btn.addEventListener('click', () => handleViewChange(btn.dataset.view));
@@ -564,6 +599,92 @@ function initTimelineControls() {
     if (resetFiltersBtn) {
         resetFiltersBtn.addEventListener('click', clearAllFilters);
     }
+
+    // 点击外部关闭下拉菜单
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.sort-control-mobile') && !e.target.closest('.view-control-mobile')) {
+            closeAllDropdowns();
+        }
+    });
+}
+
+// 初始化移动端下拉菜单
+function initMobileDropdowns() {
+    // 排序下拉菜单
+    const sortToggle = document.getElementById('sortToggle');
+    const sortDropdown = document.getElementById('sortDropdown');
+    const sortItems = document.querySelectorAll('#sortDropdown .dropdown-item');
+    
+    if (sortToggle && sortDropdown) {
+        sortToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDropdown(sortDropdown);
+            closeDropdown(document.getElementById('viewDropdown'));
+        });
+        
+        sortItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const sortValue = item.dataset.sort;
+                handleSort(sortValue);
+                updateDropdownSelection(sortItems, item);
+                closeDropdown(sortDropdown);
+            });
+        });
+    }
+    
+    // 视图下拉菜单
+    const viewToggle = document.getElementById('viewToggle');
+    const viewDropdown = document.getElementById('viewDropdown');
+    const viewItems = document.querySelectorAll('#viewDropdown .dropdown-item');
+    
+    if (viewToggle && viewDropdown) {
+        viewToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDropdown(viewDropdown);
+            closeDropdown(document.getElementById('sortDropdown'));
+        });
+        
+        viewItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const viewValue = item.dataset.view;
+                handleViewChange(viewValue);
+                updateDropdownSelection(viewItems, item);
+                closeDropdown(viewDropdown);
+            });
+        });
+    }
+}
+
+// 切换下拉菜单显示状态
+function toggleDropdown(dropdown) {
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+    }
+}
+
+// 关闭下拉菜单
+function closeDropdown(dropdown) {
+    if (dropdown) {
+        dropdown.classList.remove('show');
+    }
+}
+
+// 关闭所有下拉菜单
+function closeAllDropdowns() {
+    const dropdowns = document.querySelectorAll('.dropdown-menu');
+    dropdowns.forEach(dropdown => {
+        dropdown.classList.remove('show');
+    });
+}
+
+// 更新下拉菜单选中状态
+function updateDropdownSelection(items, selectedItem) {
+    items.forEach(item => {
+        item.classList.remove('active');
+    });
+    selectedItem.classList.add('active');
 }
 
 // 初始化视图状态
@@ -586,44 +707,61 @@ function handleSearch(e) {
     const query = e.target.value.toLowerCase().trim();
     timelineState.searchQuery = query;
     
-    const clearBtn = document.getElementById('clearSearch');
-    if (clearBtn) {
+    // 更新移动端清除按钮
+    const mobileClearBtn = document.getElementById('clearSearch');
+    if (mobileClearBtn) {
         if (query) {
-            clearBtn.style.display = 'flex';
-            clearBtn.classList.remove('opacity-0', 'invisible');
-            clearBtn.classList.add('opacity-100', 'visible');
+            mobileClearBtn.classList.add('visible');
         } else {
-            clearBtn.classList.remove('opacity-100', 'visible');
-            clearBtn.classList.add('opacity-0', 'invisible');
-            setTimeout(() => {
-                if (!timelineState.searchQuery) {
-                    clearBtn.style.display = 'none';
-                }
-            }, 200);
+            mobileClearBtn.classList.remove('visible');
         }
     }
-
+    
+    // 更新桌面端清除按钮
+    const desktopClearBtn = document.getElementById('clearSearchDesktop');
+    if (desktopClearBtn) {
+        if (query) {
+            desktopClearBtn.classList.add('visible');
+        } else {
+            desktopClearBtn.classList.remove('visible');
+        }
+    }
+    
     applyFiltersAndRender();
 }
 
 // 清除搜索
-function clearSearch() {
-    const searchInput = document.getElementById('timelineSearch');
-    const clearBtn = document.getElementById('clearSearch');
+function clearSearch(source = 'mobile') {
+    const mobileSearchInput = document.getElementById('timelineSearch');
+    const desktopSearchInput = document.getElementById('timelineSearchDesktop');
+    const mobileClearBtn = document.getElementById('clearSearch');
+    const desktopClearBtn = document.getElementById('clearSearchDesktop');
     
-    if (searchInput) {
-        searchInput.value = '';
-        timelineState.searchQuery = '';
+    // 清空两个搜索框
+    if (mobileSearchInput) {
+        mobileSearchInput.value = '';
+    }
+    if (desktopSearchInput) {
+        desktopSearchInput.value = '';
     }
     
-    if (clearBtn) {
-        clearBtn.classList.remove('opacity-100', 'visible');
-        clearBtn.classList.add('opacity-0', 'invisible');
-        setTimeout(() => {
-            clearBtn.style.display = 'none';
-        }, 200);
+    timelineState.searchQuery = '';
+    
+    // 隐藏清除按钮
+    if (mobileClearBtn) {
+        mobileClearBtn.classList.remove('visible');
     }
-
+    if (desktopClearBtn) {
+        desktopClearBtn.classList.remove('visible');
+    }
+    
+    // 重新聚焦到对应的搜索框
+    if (source === 'mobile' && mobileSearchInput) {
+        mobileSearchInput.focus();
+    } else if (source === 'desktop' && desktopSearchInput) {
+        desktopSearchInput.focus();
+    }
+    
     applyFiltersAndRender();
 }
 
@@ -772,25 +910,43 @@ function clearAllFilters() {
     timelineState.searchQuery = '';
     timelineState.currentSort = 'newest';
 
-    // 重置UI
-    const searchInput = document.getElementById('timelineSearch');
-    const clearSearchBtn = document.getElementById('clearSearch');
-    const sortSelect = document.getElementById('timelineSort');
+    // 重置搜索框
+    const mobileSearchInput = document.getElementById('timelineSearch');
+    const desktopSearchInput = document.getElementById('timelineSearchDesktop');
+    const mobileClearBtn = document.getElementById('clearSearch');
+    const desktopClearBtn = document.getElementById('clearSearchDesktop');
     
-    if (searchInput) searchInput.value = '';
-    if (clearSearchBtn) {
-        clearSearchBtn.classList.remove('opacity-100', 'visible');
-        clearSearchBtn.classList.add('opacity-0', 'invisible');
-        setTimeout(() => {
-            clearSearchBtn.style.display = 'none';
-        }, 200);
-    }
+    if (mobileSearchInput) mobileSearchInput.value = '';
+    if (desktopSearchInput) desktopSearchInput.value = '';
+    if (mobileClearBtn) mobileClearBtn.classList.remove('visible');
+    if (desktopClearBtn) desktopClearBtn.classList.remove('visible');
+
+    // 重置桌面端排序选择
+    const sortSelect = document.getElementById('timelineSort');
     if (sortSelect) sortSelect.value = 'newest';
+
+    // 重置移动端下拉菜单选中状态
+    const sortItems = document.querySelectorAll('#sortDropdown .dropdown-item');
+    const viewItems = document.querySelectorAll('#viewDropdown .dropdown-item');
+    
+    sortItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.sort === 'newest');
+    });
+    
+    viewItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.view === 'cards');
+    });
 
     // 重置筛选按钮
     const filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.filter === 'all');
+    });
+
+    // 重置桌面端视图按钮
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === 'cards');
     });
 
     // 重新渲染

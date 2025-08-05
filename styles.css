@@ -675,6 +675,157 @@ body {
 
 
 
+/* 移动端紧凑搜索栏样式 */
+.mobile-search-bar {
+    width: 100%;
+}
+
+.mobile-search-bar .search-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.mobile-search-input {
+    width: 100%;
+    padding: 10px 12px 10px 32px !important;
+    border: 2px solid rgba(255, 107, 157, 0.15);
+    border-radius: 12px;
+    background: rgba(248, 250, 252, 0.9);
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-search-input:focus {
+    border-color: #ff6b9d;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mobile-search-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* 控制图标按钮样式 */
+.control-icon-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 107, 157, 0.15);
+    border-radius: 10px;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.control-icon-btn:hover,
+.control-icon-btn.active {
+    border-color: #ff6b9d;
+    background: rgba(255, 107, 157, 0.1);
+    color: #ff6b9d;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(255, 107, 157, 0.15);
+}
+
+/* 下拉菜单样式 */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 2px solid rgba(255, 107, 157, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    min-width: 160px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.dropdown-item {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 107, 157, 0.08);
+    color: #ff6b9d;
+}
+
+.dropdown-item.active {
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, rgba(233, 30, 99, 0.1) 100%);
+    color: #ff6b9d;
+    font-weight: 600;
+}
+
+.dropdown-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* 筛选按钮响应式优化 */
+.filter-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.filter-text {
+    font-weight: 500;
+}
+
+/* 桌面端搜索输入框样式 */
+.desktop-search-input {
+    width: 100%;
+    padding: 14px 20px 14px 48px;
+    border: 2px solid rgba(255, 107, 157, 0.2);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+    font-weight: 500;
+    color: #374151;
+    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.desktop-search-input:focus {
+    border-color: #ff6b9d;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     .cloud-decoration {
@@ -685,42 +836,464 @@ body {
         padding: 1.5rem;
     }
 
-    /* 时间线控制面板响应式 */
-    .controls-container {
-        flex-direction: column;
-        gap: 12px;
-        padding: 16px;
+    /* 移动端时间线控制面板优化 */
+    .timeline-controls {
+        padding: 0 12px;
+        margin-bottom: 20px;
     }
 
-    .search-container {
-        min-width: 100%;
+    /* 移动端控制容器 */
+    .sort-control-mobile,
+    .view-control-mobile {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* 移动端控制按钮尺寸调整 */
+    .control-icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        padding: 0;
+    }
+
+    /* 移动端筛选按钮优化 */
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-height: 24px;
+    }
+
+    .filter-icon {
+        font-size: 10px;
+    }
+
+    .filter-text {
+        font-size: 12px;
+    }
+
+    /* 移动端搜索图标调整 */
+    .mobile-search-bar .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        z-index: 2;
+    }
+
+    .mobile-search-bar .clear-search {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        background: rgba(255, 107, 157, 0.1);
+        border: none;
+        border-radius: 50%;
+        color: #ff6b9d;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .mobile-search-bar .clear-search.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mobile-search-bar .clear-search:hover {
+        background: rgba(255, 107, 157, 0.2);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .controls-container {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 移动端搜索区域优化 */
+    .search-section {
         order: 1;
+        width: 100%;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 16px 20px 16px 50px;
+        border: 2px solid rgba(255, 107, 157, 0.15);
+        border-radius: 16px;
+        background: rgba(248, 250, 252, 0.8);
+        font-size: 16px; /* 防止iOS缩放 */
+        font-weight: 500;
+        color: #374151;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        -webkit-appearance: none; /* 移除iOS默认样式 */
+    }
+
+    .search-input:focus {
+        border-color: #ff6b9d;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+        transform: translateY(-1px);
+    }
+
+    .search-input::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        color: #9ca3af;
+        z-index: 2;
+        transition: color 0.3s ease;
+    }
+
+    .search-input:focus + .search-icon {
+        color: #ff6b9d;
+    }
+
+    .clear-search {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 107, 157, 0.1);
+        border: none;
+        border-radius: 50%;
+        color: #ff6b9d;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .clear-search.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .clear-search:hover {
+        background: rgba(255, 107, 157, 0.2);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    /* 移动端筛选区域优化 */
+    .filter-section {
+        order: 2;
+        width: 100%;
     }
 
     .filter-buttons {
-        order: 2;
-        justify-content: center;
-        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;
+        padding: 0;
     }
 
     .filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        border: 2px solid rgba(255, 107, 157, 0.15);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #4b5563;
         font-size: 12px;
-        padding: 6px 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        white-space: nowrap;
+        min-height: 28px; /* 与卡片标签大小一致 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        backdrop-filter: blur(10px);
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
     }
 
-    .sort-container {
+    .filter-btn:hover,
+    .filter-btn:active {
+        border-color: #ff6b9d;
+        background: rgba(255, 107, 157, 0.08);
+        color: #ff6b9d;
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 4px 12px rgba(255, 107, 157, 0.15);
+    }
+
+    .filter-btn.active {
+        background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+        color: white;
+        border-color: #ff6b9d;
+        box-shadow: 0 4px 16px rgba(255, 107, 157, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .filter-btn.active:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+    }
+
+    /* 移动端控制工具栏优化 */
+    .control-toolbar {
         order: 3;
         width: 100%;
+        flex-direction: column;
+        gap: 16px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 107, 157, 0.1);
     }
 
-    .sort-select {
+    .sort-control {
         width: 100%;
+        order: 1;
     }
 
-    .view-toggle {
-        order: 4;
+    .sort-control select {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid rgba(255, 107, 157, 0.15);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.9);
+        font-size: 15px;
+        font-weight: 500;
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6b9d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        padding-right: 40px;
+    }
+
+    .sort-control select:focus {
+        border-color: #ff6b9d;
+        box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1);
+        outline: none;
+    }
+
+    .view-toggle-container {
+        order: 2;
+        width: 100%;
+        display: flex;
         justify-content: center;
     }
+
+    .view-toggle-container .flex {
+        background: rgba(243, 244, 246, 0.8);
+        border-radius: 12px;
+        padding: 4px;
+        border: 1px solid rgba(255, 107, 157, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .view-btn {
+        padding: 10px 16px;
+        border-radius: 8px;
+        background: transparent;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 16px;
+        min-width: 44px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .view-btn.active {
+        background: white;
+        color: #ff6b9d;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transform: scale(1.05);
+    }
+
+    .view-btn:hover:not(.active) {
+         background: rgba(255, 255, 255, 0.7);
+         color: #ff6b9d;
+     }
+
+     /* 移动端筛选结果提示优化 */
+     .filter-results {
+         margin: 16px 0;
+         padding: 16px;
+         border-radius: 16px;
+         background: linear-gradient(135deg, rgba(255, 107, 157, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+         border: 1px solid rgba(255, 107, 157, 0.15);
+         backdrop-filter: blur(10px);
+     }
+
+     .filter-results .results-text {
+         font-size: 14px;
+         font-weight: 600;
+         color: #374151;
+     }
+
+     .clear-filters {
+         padding: 10px 16px;
+         border-radius: 12px;
+         background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+         color: white;
+         border: none;
+         font-size: 13px;
+         font-weight: 600;
+         cursor: pointer;
+         transition: all 0.3s ease;
+         box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+         min-height: 40px;
+         -webkit-tap-highlight-color: transparent;
+     }
+
+     .clear-filters:hover {
+         transform: translateY(-1px) scale(1.02);
+         box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+     }
+
+     /* 移动端滚动优化 */
+     .filter-buttons {
+         -webkit-overflow-scrolling: touch;
+         scroll-behavior: smooth;
+     }
+
+     /* 移动端空状态优化 */
+     .empty-state {
+         text-align: center;
+         padding: 40px 20px;
+         background: rgba(255, 255, 255, 0.9);
+         border-radius: 20px;
+         margin: 20px 0;
+         backdrop-filter: blur(10px);
+         border: 1px solid rgba(255, 107, 157, 0.1);
+     }
+
+     .empty-icon {
+         font-size: 3rem;
+         margin-bottom: 16px;
+         opacity: 0.7;
+     }
+
+     .empty-title {
+         font-size: 1.25rem;
+         font-weight: 700;
+         color: #374151;
+         margin-bottom: 8px;
+     }
+
+     .empty-description {
+         font-size: 0.9rem;
+         color: #6b7280;
+         margin-bottom: 20px;
+         line-height: 1.5;
+     }
+
+     .reset-btn {
+         padding: 12px 24px;
+         background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+         color: white;
+         border: none;
+         border-radius: 14px;
+         font-size: 14px;
+         font-weight: 600;
+         cursor: pointer;
+         transition: all 0.3s ease;
+         box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+         min-height: 44px;
+         -webkit-tap-highlight-color: transparent;
+     }
+
+     .reset-btn:hover {
+         transform: translateY(-1px) scale(1.02);
+         box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+     }
+
+     /* 移动端触摸优化 */
+     .filter-btn:active,
+     .view-btn:active,
+     .clear-search:active,
+     .clear-filters:active,
+     .reset-btn:active {
+         transform: scale(0.98);
+         transition: transform 0.1s ease;
+     }
+
+     /* 移动端焦点样式优化 */
+     .search-input:focus,
+     .sort-control select:focus,
+     .filter-btn:focus,
+     .view-btn:focus,
+     .clear-search:focus,
+     .clear-filters:focus,
+     .reset-btn:focus {
+         outline: 2px solid #ff6b9d;
+         outline-offset: 2px;
+     }
+
+     /* 移动端安全区域适配 */
+     .timeline-controls {
+         padding-left: max(12px, env(safe-area-inset-left));
+         padding-right: max(12px, env(safe-area-inset-right));
+     }
+
+     /* 移动端横屏适配 */
+     @media (max-width: 768px) and (orientation: landscape) {
+         .controls-container {
+             padding: 16px;
+             gap: 16px;
+         }
+
+         .filter-buttons {
+             gap: 8px;
+         }
+
+         .filter-btn {
+             padding: 4px 12px;
+             font-size: 12px;
+             min-height: 28px;
+         }
+
+         .search-input {
+             padding: 14px 18px 14px 46px;
+         }
+
+         .sort-control select {
+             padding: 12px 14px;
+         }
+     }
 
     /* 时间线响应式 */
     .timeline-container[data-view="timeline"]::before {
@@ -1077,6 +1650,30 @@ body {
     padding: 20px;
 }
 
+/* 移动端网格视图优化 - 单列布局 */
+@media (max-width: 768px) {
+    .timeline-container[data-view="grid"] {
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 12px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        /* 确保单列布局的完美对称 */
+        width: 100%;
+        position: relative;
+    }
+    
+    /* 移动端九宫格外层容器 */
+    main .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+    
+    /* 移动端保持与电脑端一致的卡片样式，不做特殊覆盖 */
+}
+
 .timeline-container[data-view="grid"]::before {
     display: none;
 }
@@ -1285,7 +1882,11 @@ body {
     .timeline-node {
         left: 20px;
     }
+    
+    /* 移动端网格视图保持与电脑端一致的样式 */
 }
+
+/* 移动端和平板设备保持与电脑端一致的网格样式 */
 
 /* 自定义滚动条 */
 ::-webkit-scrollbar {
